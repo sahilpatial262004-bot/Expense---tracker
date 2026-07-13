@@ -1,0 +1,322 @@
+/* ==========================================
+   History Page JavaScript
+========================================== */
+
+const historyTable = document.getElementById("historyTable");
+
+const searchInput = document.getElementById("searchTransaction");
+
+const dateFilter = document.getElementById("filterDate");
+
+const categoryFilter = document.getElementById("filterCategory");
+
+const resetButton = document.getElementById("resetFilter");
+
+
+/* ==========================================
+   Load History
+========================================== */
+
+function loadHistory(data = transactions){
+
+    if(!historyTable) return;
+
+    historyTable.innerHTML = "";
+
+    if(data.length === 0){
+
+        historyTable.innerHTML = `
+
+        <tr>
+
+            <td colspan="6">
+
+                No Transactions Found
+
+            </td>
+
+        </tr>
+
+        `;
+
+        return;
+
+    }
+
+    data
+    .sort((a,b)=>b.id-a.id)
+    .forEach(function(item){
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+
+            <td>${item.date}</td>
+
+            <td>
+
+                <span style="color:${item.type==="income" ? "#2ecc71" : "#ff4d4d"};font-weight:600;">
+
+                ${item.type.toUpperCase()}
+
+                </span>
+
+            </td>
+
+            <td>${item.category}</td>
+
+            <td>${item.source}</td>
+
+            <td>
+
+                ${currency}${Number(item.amount).toFixed(2)}
+
+            </td>
+
+            <td>
+
+               <button class="edit-btn" data-id="${item.id}">✏️
+    <i class=""></i>
+</button>
+
+<button class="delete-btn" data-id="${item.id}">
+    <i class="fa-solid fa-trash"></i>
+</button>
+
+            </td>
+
+        `;
+
+        historyTable.appendChild(row);
+
+    });
+
+}
+
+loadHistory();
+/* ==========================================
+   Delete Transaction
+========================================== */
+
+historyTable.addEventListener("click", function(e){
+
+    const deleteBtn = e.target.closest(".delete-btn");
+
+    if(!deleteBtn) return;
+
+    const id = Number(deleteBtn.getAttribute("data-id"));
+
+    // Remove from transactions array
+    const index = transactions.findIndex(item => item.id === id);
+
+    if(index !== -1){
+
+        transactions.splice(index, 1);
+
+        // Update Local Storage
+        // localStorage.setItem("transactions", JSON.stringify(transactions));
+        saveTransactions();
+
+        // Reload History
+        loadHistory(transactions);
+
+        // Update Dashboard (if available)
+        if(typeof loadDashboard === "function"){
+            loadDashboard();
+        }
+
+        if(typeof loadRecentTransactions === "function"){
+            loadRecentTransactions();
+        }
+
+        alert("🗑️ Transaction Deleted Successfully!");
+
+    }
+
+});
+/* ==========================================
+   Filters (Search + Category + Date)
+========================================== */
+
+// Apply Filters Together
+function applyFilters(){
+
+    let filtered = [...transactions];
+
+    const searchValue = searchInput.value.toLowerCase().trim();
+    const dateValue = dateFilter.value;
+    const categoryValue = categoryFilter.value;
+
+    // 🔍 Search Filter
+    if(searchValue){
+
+        filtered = filtered.filter(item =>
+            item.source.toLowerCase().includes(searchValue) ||
+            item.category.toLowerCase().includes(searchValue) ||
+            item.type.toLowerCase().includes(searchValue)
+        );
+
+    }
+
+    // 📅 Date Filter
+    if(dateValue){
+
+        filtered = filtered.filter(item =>
+            item.date === dateValue
+        );
+
+    }
+
+    // 📂 Category Filter
+    if(categoryValue){
+
+        filtered = filtered.filter(item =>
+            item.category === categoryValue
+        );
+
+    }
+
+    loadHistory(filtered);
+}
+
+
+/* ==========================================
+   Event Listeners
+========================================== */
+
+// 🔍 Live Search
+if(searchInput){
+
+    searchInput.addEventListener("input", applyFilters);
+
+}
+
+// 📅 Date Filter
+if(dateFilter){
+
+    dateFilter.addEventListener("change", applyFilters);
+
+}
+
+// 📂 Category Filter
+if(categoryFilter){
+
+    categoryFilter.addEventListener("change", applyFilters);
+
+}
+
+// 🔄 Reset Filters
+if(resetButton){
+
+    resetButton.addEventListener("click", function(){
+
+        searchInput.value = "";
+        dateFilter.value = "";
+        categoryFilter.value = "";
+
+        loadHistory(transactions);
+
+    });
+
+}
+/* ==========================================
+   Edit Transaction System
+========================================== */
+
+const editModal = document.getElementById("editModal");
+const editForm = document.getElementById("editForm");
+
+const editId = document.getElementById("editId");
+const editName = document.getElementById("editName");
+const editCategory = document.getElementById("editCategory");
+const editAmount = document.getElementById("editAmount");
+const editDate = document.getElementById("editDate");
+
+const closeModal = document.getElementById("closeModal");
+
+
+/* ==========================
+   Open Edit Modal
+========================== */
+
+historyTable.addEventListener("click", function(e){
+
+    const editBtn = e.target.closest(".edit-btn");
+
+    if(!editBtn) return;
+
+    const id = Number(editBtn.getAttribute("data-id"));
+
+    const transaction = transactions.find(t => t.id === id);
+
+    if(transaction){
+
+        editId.value = transaction.id;
+        editName.value = transaction.source;
+        editCategory.value = transaction.category;
+        editAmount.value = transaction.amount;
+        editDate.value = transaction.date;
+
+        editModal.style.display = "flex";
+
+    }
+
+});
+
+
+/* ==========================
+   Close Modal
+========================== */
+
+if(closeModal){
+
+    closeModal.addEventListener("click", function(){
+        editModal.style.display = "none";
+    });
+
+}
+
+
+/* ==========================
+   Update Transaction
+========================== */
+
+if(editForm){
+
+    editForm.addEventListener("submit", function(e){
+
+        e.preventDefault();
+
+        const id = Number(editId.value);
+
+        const index = transactions.findIndex(t => t.id === id);
+
+        if(index !== -1){
+
+            transactions[index].source = editName.value;
+            transactions[index].category = editCategory.value;
+            transactions[index].amount = Number(editAmount.value);
+            transactions[index].date = editDate.value;
+
+            // localStorage.setItem("transactions", JSON.stringify(transactions));
+            saveTransactions();
+
+            loadHistory(transactions);
+
+            if(typeof loadDashboard === "function"){
+                loadDashboard();
+            }
+
+            if(typeof loadRecentTransactions === "function"){
+                loadRecentTransactions();
+            }
+
+            editModal.style.display = "none";
+
+            alert("✏️ Transaction Updated Successfully!");
+
+        }
+
+    });
+
+}

@@ -1,0 +1,304 @@
+/* =====================================
+   Responsive Design
+===================================== */
+
+
+/* =====================================
+   Large Laptop (1200px)
+===================================== */
+
+@media (max-width:1200px){
+
+    .dashboard-cards{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+
+/* =====================================
+   Tablet (992px)
+===================================== */
+
+@media (max-width:992px){
+
+    .sidebar{
+
+        width:220px;
+
+    }
+
+    .main-content{
+
+        margin-left:220px;
+
+    }
+
+    .dashboard-cards{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+
+/* =====================================
+   Small Tablet (768px)
+===================================== */
+@media (max-width:768px){
+
+    .sidebar{
+        position:fixed;
+        top:0;
+        left:-270px;
+        width:270px;
+        height:100vh;
+        padding:25px;
+        transition:.3s ease;
+        z-index:9999;
+    }
+
+    .sidebar.active{
+        left:0;
+    }
+
+    .logo h2{
+        display:block;
+    }
+
+    .sidebar nav ul li a{
+        font-size:16px;
+        justify-content:flex-start;
+    }
+
+    .sidebar nav ul li a i{
+        font-size:18px;
+    }
+
+    .main-content{
+        margin-left:0;
+        width:100%;
+        padding:20px;
+    }
+
+    .dashboard-cards{
+        grid-template-columns:1fr;
+    }
+
+}
+/* =====================================
+   Mobile Devices (576px)
+===================================== */
+
+@media (max-width:576px){
+
+    .sidebar{
+        position:fixed;
+        left:-270px;
+        top:0;
+        width:270px;
+        height:100vh;
+        transition:.3s;
+        z-index:999;
+    }
+
+    .sidebar.active{
+        left:0;
+    }
+
+    .main-content{
+        margin-left:0;
+        width:100%;
+        padding:15px;
+        overflow-x:hidden;
+    }
+
+    .navbar{
+        flex-direction:row;
+        justify-content:space-between;
+        align-items:center;
+        padding:15px;
+    }
+
+    .menu-btn{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+    }
+
+    .nav-left h1{
+        font-size:22px;
+    }
+
+    .nav-right{
+        width:auto;
+    }
+
+    .dashboard-cards{
+        grid-template-columns:1fr;
+    }
+
+    .card{
+        width:100%;
+    }
+
+    .transactions{
+        overflow-x:auto;
+    }
+
+    table{
+        min-width:650px;
+    }
+
+    .quick-actions{
+        flex-direction:column;
+    }
+
+    .history-filters{
+        flex-direction:column;
+    }
+
+    .filter-group{
+        width:100%;
+    }
+
+    .action-btn{
+        width:100%;
+        margin-top:10px;
+    }
+
+}
+/* =====================================
+   Extra Small Devices (400px)
+===================================== */
+
+@media (max-width:400px){
+
+    .navbar{
+
+        padding:15px;
+
+    }
+
+    .nav-left h1{
+
+        font-size:20px;
+
+    }
+
+    .menu-btn,
+    .theme-btn,
+    .user{
+
+        width:40px;
+        height:40px;
+
+    }
+
+    .nav-right select{
+
+        width:100%;
+
+    }
+
+    .card{
+
+        flex-direction:column;
+
+        text-align:center;
+
+        padding:20px;
+
+    }
+
+    .card-icon{
+
+        width:60px;
+        height:60px;
+
+        font-size:24px;
+
+    }
+
+    .card-info h2{
+
+        font-size:24px;
+
+    }
+
+    .section-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:10px;
+
+    }
+
+    .transactions{
+
+        padding:12px;
+
+    }
+
+    .action-btn{
+
+        font-size:16px;
+
+        padding:15px;
+
+    }
+
+}
+
+
+/* =====================================
+   Large Screens (1400px+)
+===================================== */
+
+@media (min-width:1400px){
+
+    .container{
+
+        max-width:1600px;
+
+        margin:auto;
+
+    }
+
+}
+/* ==========================================
+   History Filters Responsive
+========================================== */
+
+@media(max-width:768px){
+
+    .history-filters{
+
+        flex-direction:column;
+
+        padding:20px;
+
+    }
+
+    .filter-group{
+
+        width:100%;
+
+        min-width:100%;
+
+    }
+
+    .action-btn{
+
+        width:100%;
+
+        margin-top:10px;
+
+    }
+
+}

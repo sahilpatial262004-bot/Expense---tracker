@@ -1,0 +1,44 @@
+/* ==========================================
+   Income Page JavaScript
+========================================== */
+
+const incomeForm = document.getElementById("incomeForm");
+
+if (incomeForm) {
+
+    // Auto Date
+    document.getElementById("incomeDate").valueAsDate = new Date();
+
+    incomeForm.addEventListener("submit", function (e) {
+
+        e.preventDefault();
+
+        const income = {
+
+            id: Date.now(),
+
+            type: "income",
+
+            source: document.getElementById("incomeSource").value,
+
+            category: document.getElementById("incomeCategory").value,
+
+            amount: Number(document.getElementById("incomeAmount").value),
+
+            date: document.getElementById("incomeDate").value,
+
+            description: document.getElementById("incomeDescription").value
+
+        };
+
+        addTransaction(income);
+
+        alert("✅ Income Added Successfully!");
+
+        incomeForm.reset();
+
+        document.getElementById("incomeDate").valueAsDate = new Date();
+
+    });
+
+}
